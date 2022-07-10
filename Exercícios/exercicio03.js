@@ -6,6 +6,17 @@
 // https://rickandmortyapi.com/documentation/#rest
 
 async function getRickAndMortyCharacters() {
-    
+  const response = await fetch(
+    "https://rickandmortyapi.com/api/character/1,2,3,4,5"
+  );
+  const personagens = await response.json();
+  return personagens.map((item) => {
+    return {
+      nome: item.name,
+      genero: item.gender,
+      avatar: item.image,
+      especie: item.species,
+    };
+  });
 }
-    export default getRickAndMortyCharacters;
+module.export = getRickAndMortyCharacters;
