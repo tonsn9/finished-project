@@ -29,8 +29,8 @@ export const Container = styled.main`
 
     form {
       background: #ffffff;
-      border: 1px solid  #717171;
       border-radius: 0.5rem;
+      box-shadow: 5px 5px 5px #EFE9F4;
       display: flex;
       flex-direction: column;
       align-items: center;

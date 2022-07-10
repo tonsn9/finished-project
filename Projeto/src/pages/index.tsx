@@ -1,8 +1,37 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { useEffect, useState } from "react";
+import api from "../services/api";
 import { Container } from "../styles/modules/home";
 
 const Home: NextPage = () => {
+
+  async function getCars() {
+    try {
+      const response = await api.get("/carros/marcas");
+      
+    } catch (err) {
+      
+    }
+
+    try {
+      const response = await api.get("marcas/59/modelos");
+      
+    } catch (err) {
+      
+    } 
+
+    try {
+      const response = await api.get(` modelos/5940/anos`)
+      
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    getCars();
+  }, []);
   return (
     <>
       <Head>
