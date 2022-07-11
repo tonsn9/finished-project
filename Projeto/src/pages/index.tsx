@@ -43,15 +43,15 @@ const Home: NextPage = () => {
           <h3>Consulte o valor de um veículo de fora gratuita</h3>
           <form>
             <select>
-              <option>test</option>
+              <option>Marca</option>
             </select>
 
             <select>
-              <option>test</option>
+              <option>Modelo</option>
             </select>
 
             <select>
-              <option>test</option>
+              <option>Ano</option>
             </select>
             <button type="submit">Consultar preço</button>
           </form>
