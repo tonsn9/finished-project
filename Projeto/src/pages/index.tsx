@@ -5,45 +5,51 @@ import api from "../services/api";
 import { Container } from "../styles/modules/home";
 
 interface Cars {
-  nome: string;
-  codigo: string;
+    nome: string;
+    codigo: string;
+
 }
 
 const Home: NextPage = () => {
-  const [cars, setCars] = useState<Cars[]>([]);
-  const [selectedCar, setSelectedCar] = useState("");
-  const [models, setModels] = useState([]) as any;
-  const [selectedModel, setSelectedModel] = useState("");
-  const [years, setYears] = useState([]) as any;
+const [cars, setCars] = useState<Cars[]>([]);
+const [selectedCar, setSelectedCar] = useState('');
+const [models, setModels] = useState([]) as any;
+const [selectedModel, setSelectedModel] = useState('');
+const [years, setYears] = useState([]) as any;
   async function getCars() {
     try {
       const response = await api.get("/carros/marcas");
-      setCars(response.data);
+      setCars(response.data)
+      
     } catch (err) {
       console.log(err);
     }
+    
   }
-  console.log(years);
+  console.log(years)  
 
   async function getModels(codigo: string) {
     try {
       const response = await api.get(`/carros/marcas/${codigo}/modelos`);
-      setModels(response.data);
+      setModels(response.data)
+      
     } catch (err) {
       console.log(err);
     }
+
   }
 
   async function getYears(codigo: string, modelo: string) {
     try {
-      const response = await api.get(
-        `/carros/marcas/${codigo}/modelos/${modelo}/anos`
-      );
-      setYears(response.data);
-    } catch (err) {
+      const response = await api.get(`/carros/marcas/${codigo}/modelos/${modelo}/anos`);
+      setYears(response.data)
+      
+    } catch (err) { 
       console.log(err);
     }
+
   }
+  
 
   useEffect(() => {
     getCars();
@@ -61,33 +67,21 @@ const Home: NextPage = () => {
           <h1>Tabela Fipe</h1>
           <h3>Consulte o valor de um veículo de fora gratuita</h3>
           <form>
-            <select
-              value={selectedCar}
-              onChange={(event) => setSelectedCar(event.target.value)}
-            >
-              {cars.map((car) => (
-                <option key={car.codigo} value={car.codigo}>
-                  {car.nome}
-                </option>
+            <select value={selectedCar} onChange={event => setSelectedCar(event.target.value)}>
+              {cars.map(car => (
+                <option key={car.codigo} value={car.codigo}>{car.nome}</option>
               ))}
             </select>
 
-            <select
-              value={selectedModel}
-              onChange={(event) => setSelectedModel(event.target.value)}
-            >
-              {models?.modelos?.map((model: any) => (
-                <option key={model.codigo} value={model.codigo}>
-                  {model.nome}
-                </option>
+            <select value={selectedModel} onChange={event => setSelectedModel(event.target.value)}>
+                {models?.modelos?.map((model: any) => (
+                <option key={model.codigo} value={model.codigo}>{model.nome}</option>
               ))}
-            </select>
+            </select> 
 
             <select>
-              {years.map((year: any) => (
-                <option key={year.codigo} value={year.codigo}>
-                  {year.nome}
-                </option>
+            {years.map((year: any) => (
+                <option key={year.codigo} value={year.codigo}>{year.nome}</option>
               ))}
             </select>
             <button type="submit">Consultar preço</button>
