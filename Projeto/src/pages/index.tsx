@@ -1,95 +1,121 @@
+import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { FormEvent, useEffect, useState } from "react";
-import api from "../services/api";
 
-interface Props {
-  nome: string;
-  codigo: string;
-}
+import { useFipe } from "../hooks/useFipe";
+import { Select, FormControl, Button } from "../components";
 
-interface Price {
-  Valor: string;
-  Marca: string;
-  Modelo: string;
-  AnoModelo: number;
-  Combustivel: string;
-  CodigoFipe: string;
-  MesReferencia: string;
-  TipoVeiculo: number;
-  SiglaCombustivel: string;
-}
-
-interface Props2 {
-  nome: string;
-  codigo: number;
-}
+import { Box, Container, PriceContainer, Wrapper } from "../styles/pages/home";
 
 const Home: NextPage = () => {
-  const [cars, setCars] = useState<Props[]>([]);
   const [selectedCar, setSelectedCar] = useState("");
-  const [models, setModels] = useState<{ anos: Props[]; modelos: Props2[] }>();
   const [selectedModel, setSelectedModel] = useState("");
-  const [years, setYears] = useState<Props[]>([]);
-  const [price, setPrice] = useState<Price>();
   const [selectedYear, setSelectedYear] = useState("");
-  // const [showPrice, setShowPrice] = useState(false);
-  async function getCars() {
-    try {
-      const response = await api.get("/carros/marcas");
-      setCars(response.data);
-    } catch (err) {
-      // console.log(err);
-    }
-  }
 
-  async function getModels(codigo: string) {
-    try {
-      const response = await api.get(`/carros/marcas/${codigo}/modelos`);
-      setModels(response.data);
-    } catch (err) {
-      // console.log(err);
-    }
-  }
+  const {
+    cars,
+    models,
+    years,
+    fetchModels,
+    fetchYears,
+    consultPrice,
+    vehicle,
+    isConsultingPrice,
+    hasError,
+  } = useFipe();
 
-  async function getYears(codigo: string, modelo: string) {
-    try {
-      const response = await api.get(
-        `/carros/marcas/${codigo}/modelos/${modelo}/anos`
-      );
-      setYears(response.data);
-    } catch (err) {
-      // console.log(err);
-    }
-  }
-
-  async function getPrice(codigo: string, modelo: string, year: string) {
-    try {
-      const response = await api.get(
-        `/carros/marcas/${codigo}/modelos/${modelo}/anos/${year}`
-      );
-      setPrice(response.data);
-    } catch (err) {
-      // console.log(err);
-    }
-  }
-
-  function handleSubmit(event: FormEvent) {
-    event.preventDefault();
-    getPrice(selectedCar, selectedModel, selectedYear);
-  }
+  const shouldShowPrice = Object.keys(vehicle).length > 0;
 
   useEffect(() => {
-    getCars();
-    getModels(selectedCar);
-    getYears(selectedCar, selectedModel);
-  }, [selectedCar, selectedModel]);
+    if (selectedCar.length > 0) {
+      fetchModels(selectedCar);
+    }
+
+    if (selectedModel.length > 0) {
+      fetchYears(selectedCar, selectedModel);
+    }
+  }, [fetchModels, fetchYears, selectedCar, selectedModel]);
+
   return (
     <>
       <Head>
-        <title>Projeto</title>
+        <title>Tabela Fipe</title>
       </Head>
-       
+
+      <Container>
+        <Wrapper>
+          <h1>Tabela Fipe</h1>
+          <strong>Consulte o valor de um veículo de fora gratuita</strong>
+
+          <Box>
+            <FormControl visible>
+              <Select
+                value={selectedCar}
+                onChange={(event) => setSelectedCar(event.target.value)}
+              >
+                <option>Carros</option>
+                {cars?.map((item) => (
+                  <option key={item.codigo} value={item.codigo}>
+                    {item.nome}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl visible={selectedCar.length > 0}>
+              <Select
+                value={selectedModel}
+                onChange={(event) => setSelectedModel(event.target.value)}
+              >
+                <option>Modelos</option>
+                {models?.map((item) => (
+                  <option key={item.codigo} value={item.codigo}>
+                    {item.nome}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl visible={selectedModel.length > 0}>
+              <Select
+                value={selectedYear}
+                onChange={(event) => setSelectedYear(event.target.value)}
+              >
+                <option>Anos</option>
+                {years?.map((item) => (
+                  <option key={item.codigo} value={item.codigo}>
+                    {item.nome}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+
+            <Button
+              type="button"
+              disabled={!(selectedYear.length > 0) || isConsultingPrice}
+              onClick={() =>
+                consultPrice(selectedCar, selectedModel, selectedYear)
+              }
+            >
+              Consultar preço
+            </Button>
+          </Box>
+
+          {shouldShowPrice && (
+            <PriceContainer>
+              <strong>
+                Tabela Fipe: Preço {`${vehicle.modelo} ${vehicle.ano}`}
+              </strong>
+              <span>{vehicle.valor}</span>
+              <small>Este é o preço de compra do veículo</small>
+            </PriceContainer>
+          )}
+
+          {hasError && (
+            <p>Ocorreu um erro ao buscar informações sobre este veículo.</p>
+          )}
+        </Wrapper>
+      </Container>
     </>
   );
 };
