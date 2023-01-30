@@ -45,7 +45,7 @@ const Home: NextPage = () => {
       <Container>
         <Wrapper>
           <h1>Tabela Fipe</h1>
-          <strong>Consulte o valor de um veículo de fora gratuita</strong>
+          <strong>Consulte o valor de um veículo de forma gratuita</strong>
 
           <Box>
             <FormControl visible>
