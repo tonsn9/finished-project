@@ -7,8 +7,11 @@
 // checkIfTheFirstLetterIsUppercase("xDD") --> false
 // checkIfTheFirstLetterIsUppercase("Deu Certo!") --> true
 
-function checkIfTheFirstLetterIsUppercase(word) {
-    return word.charAt(0) == word.charAt(0).toUpperCase();
-}
-
-module.export = checkIfTheFirstLetterIsUppercase; 
+function isFirstLetterUppercase(word) {
+    if (typeof word !== 'string' || word.length === 0) {
+      throw new Error('Invalid input: expected a non-empty string.');
+    }
+    return word.charCodeAt(0) >= 65 && word.charCodeAt(0) <= 90;
+  }
+  
+  module.exports = isFirstLetterUppercase;

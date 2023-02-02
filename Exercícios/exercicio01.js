@@ -12,13 +12,13 @@
 // "Nanananananananananana Batman!" --> "##########################man!"
 
 const maskify = maskinfo => {
-    if (maskinfo.length < 5) return maskinfo
-    const allCharactersExceptLastFour = maskinfo.slice(0, -4)
-    const firstCharacter = '#'.repeat(allCharactersExceptLastFour.length)
-    const takeFourCharacters = maskinfo.slice(-4)
-    const printCharacters = firstCharacter.concat(takeFourCharacters)
-  
-    return `${printCharacters}`
-  }
+  if (maskinfo === '') return '';
+  if (maskinfo.length < 5) return maskinfo;
 
-module.export = maskify;
+  const allCharactersExceptLastFour = maskinfo.slice(0, -4);
+  const firstCharacter = '#'.repeat(allCharactersExceptLastFour.length);
+
+  return `${'#'.repeat(allCharactersExceptLastFour.length)}${maskinfo.slice(-4)}`;
+};
+
+module.exports = maskify;

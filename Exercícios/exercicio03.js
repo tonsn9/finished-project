@@ -5,18 +5,26 @@
 // Documentação
 // https://rickandmortyapi.com/documentation/#rest
 
-async function getRickAndMortyCharacters() {
-  const response = await fetch(
-    "https://rickandmortyapi.com/api/character/1,2,3,4,5"
-  );
-  const personagens = await response.json();
-  return personagens.map((item) => {
-    return {
-      nome: item.name,
-      genero: item.gender,
-      avatar: item.image,
-      especie: item.species,
-    };
-  });
+const API_URL = "https://rickandmortyapi.com/api/character/";
+
+async function getRickAndMortyCharacters(page = 1) {
+  try {
+    const response = await fetch(`${API_URL}${page}`);
+    if (!response.ok) {
+      throw new Error(`Unable to fetch characters: ${response.statusText}`);
+    }
+    const characters = await response.json();
+    return characters.map((item) => {
+      return {
+        name: item.name,
+        gender: item.gender,
+        image: item.image,
+        species: item.species,
+      };
+    });
+  } catch (error) {
+    console.error(error);
+  }
 }
-module.export = getRickAndMortyCharacters;
+
+export default getRickAndMortyCharacters;
